@@ -11,6 +11,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
 
 @Slf4j
@@ -28,21 +29,20 @@ public class DemoApplication {
 
     public class EnvironmentsConfigurer implements ApplicationContextAware, BeanFactoryPostProcessor{
 
-        @Autowired
         ApplicationContext applicationContext;
+
+        @Override
+        public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+            this.applicationContext = applicationContext;
+        }
 
         @Override
         public void postProcessBeanFactory(ConfigurableListableBeanFactory configurableListableBeanFactory)
                 throws BeansException {
-            Environment environment = applicationContext.getEnvironment();
-            log.info("Setting property here from enviroment variables.");
+            ConfigurableEnvironment environment = (ConfigurableEnvironment) applicationContext.getEnvironment();
+            log.info("Setting property here from environment variables.");
         }
 
-        @Override
-        public void setApplicationContext(ApplicationContext applicationContext)
-                throws BeansException {
-            this.applicationContext = applicationContext;
-        }
     }
 
 }
